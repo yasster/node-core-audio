@@ -463,6 +463,8 @@ void Audio::AudioEngine::NewInstance(const Nan::FunctionCallbackInfo<v8::Value>&
 	//HandleScope scope;
 
 	unsigned argc = info.Length();
+	
+	Isolate* isolate = info.GetIsolate();
 
 	if( argc > 2 )
 		argc = 2;
@@ -473,8 +475,10 @@ void Audio::AudioEngine::NewInstance(const Nan::FunctionCallbackInfo<v8::Value>&
 	if( argc > 1 )
 		argv[1] = info[1];
 
+	//Local<Function> cons = Local<Function>::New(isolate, constructor);
+	Local<Context> context = isolate->GetCurrentContext();
 	//Local<Object> instance = constructor->NewInstance( argc, argv );
-	Local<Object> instance = Nan::New(constructor)->NewInstance(argc, argv);
+	Local<Object> instance = Nan::New(constructor)->NewInstance(context, argc, argv).ToLocalChecked();
 	//Local<Object> instance = constructor->NewInstance(argc, argv);
 
 	info.GetReturnValue().Set( instance );
